@@ -1,33 +1,33 @@
 pipeline {
     agent any
+    
     tools {
+        // Use the 'Maven' tool to build the Java application
         maven 'Maven'
     }
+    
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
-                script {
-                    echo "Building the application..."
-                    sh 'mvn package'
-                }
+                // Build the Java application using Maven
+                sh 'mvn clean package'
             }
         }
-
-        stage('build image') {
-            steps {
-                script {
-                    echo "building the docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        sh 'docker build -t docker push shivam086r/java-app:java-1.0 .'
-                        sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh 'docker push shivam086r/java-app:java-1.0'
-                }
+        
+        stage('Build Docker Image') {
+            environment {
+                // Set environment variables for the Docker image name and tag
+                DOCKER_IMAGE_NAME = "shivam086r/java-app:java-1.0"
+                DOCKER_IMAGE_TAG = "latest"
             }
-        }
-        stage('deploy') {
             steps {
-                script {
-                    echo "Deploying the application..."
+                // Build the Docker image using the Dockerfile and application JAR file
+                sh 'docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .'
+                
+                // Login to Docker Hub and push the Docker image
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-repo', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                    sh "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
+                    sh "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
                 }
             }
         }
