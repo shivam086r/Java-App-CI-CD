@@ -17,8 +17,8 @@ pipeline {
         stage('Build Docker Image') {
             environment {
                 // Set environment variables for the Docker image name and tag
-                DOCKER_IMAGE_NAME = "shivam086r/java-app:java"
-                DOCKER_IMAGE_TAG = "1.0"
+                DOCKER_IMAGE_NAME = "shivam086r/java-app"
+                DOCKER_IMAGE_TAG = "java-1.0"
             }
             steps {
                 // Build the Docker image using the Dockerfile and application JAR file
