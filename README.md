@@ -1,4 +1,4 @@
-# Deployin Java App on dockerhub through containerized jenkins maven docker and .
+# Deploying Java App on dockerhub through containerized jenkins maven docker and .
 # EC2 Instance conf.
 
 Ubuntu 20.04 (LTS)x64
